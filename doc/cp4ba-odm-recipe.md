@@ -5,7 +5,13 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
 ### Adding a global pull secret using your [IBM Entitlement Key](https://myibm.ibm.com/products-services/containerlibrary) Cluster wide.
     
 ```bash
-export IBM_ENTITLEMENT_KEY=<IBM-ENTITELMENT-KEY>
+export IBM_ENTITLEMENT_KEY=<IBM.ENTITELMENT.KEY>
+```
+```bash
+oc create secret docker-registry cpregistrysecret -n kube-system \
+ --docker-server=cp.icr.io/cp/cpd \
+ --docker-username=cp \
+ --docker-password=${IBM_ENTITLEMENT_KEY} 
 ```
 
 > If you want all the pods in your cluster to be able to pull images from the entitled registry, update the pull secret that is in the openshift-config namespace with the Docker account and entitlement key information.
