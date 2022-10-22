@@ -1,7 +1,7 @@
 resources:
 # IBM Software
 - argocd/operators/ibm-cp4a-db2-operator.yaml
-- argocd/instances/ibm-cp4a-db2-instance.yaml
+# - argocd/instances/ibm-cp4a-db2-instance.yaml
 - argocd/instances/ibm-cp4a-openldap-odm.yaml
 ## Cloud Pak for Integration
 #- argocd/operators/ibm-ace-operator.yaml
