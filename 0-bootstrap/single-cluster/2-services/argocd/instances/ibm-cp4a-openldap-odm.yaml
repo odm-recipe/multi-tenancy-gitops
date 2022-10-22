@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ibm-cp4ba-openldap-odm
+  name: ibm-cp4a-openldap-odm
   annotations:
     argocd.argoproj.io/sync-wave: "280"
   labels:
