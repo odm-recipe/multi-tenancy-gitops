@@ -2,6 +2,16 @@
 
 This recipe is for deploying the Operational Desision Manager in a single namespace (i.e. `tools`): 
 
+### Create [IBM Entitlement Key](https://myibm.ibm.com/products-services/containerlibrary) Cluster wide.
+    ```bash
+    export IBM_ENTITLEMENT_KEY=<IBM-ENTITELMENT-KEY>
+    ```
+    ```bash
+    oc create secret docker-registry ibm-entitlement-key -n openshift-config \
+    --docker-server=cp.icr.io \
+    --docker-username=cp \
+    --docker-password=${IBM_ENTITLEMENT_KEY} 
+    ```
 ### Infrastructure - Kustomization.yaml
 1. Edit the Infrastructure layer `${GITOPS_PROFILE}/1-infra/kustomization.yaml`, un-comment the following lines, commit and push the changes and synchronize the `infra` Application in the ArgoCD console.
 
@@ -27,7 +37,7 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
 
     | Component | Access Mode | IBM Cloud | OCS/ODF |
     | --- | --- | --- | --- |
-    | Platform Navigator | RWX | managed-nfs-storage | ocs-storagecluster-cephfs |
+    | DB2 | RWX | ibmc-file-gold-gid | ocs-storagecluster-cephfs |
 
 1. Edit the Services layer `${GITOPS_PROFILE}/2-services/kustomization.yaml` and install Sealed Secrets by uncommenting the following line, **commit** and **push** the changes and refresh the `services` Application in the ArgoCD console.
    
