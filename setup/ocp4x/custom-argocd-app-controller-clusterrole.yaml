@@ -16,7 +16,7 @@ rules:
       - configmaps
       - secrets
       - serviceaccounts
-      - db2ucluster
+      # - db2ucluster
   - verbs:
       - '*'
     apiGroups:
@@ -269,6 +269,12 @@ rules:
       - icp4a.ibm.com
     resources:
       - icp4aclusters
+  - verbs: #db2
+      - '*'
+    apiGroups:
+      - db2u.databases.ibm.com
+    resources:
+      - db2uclusters
   - apiGroups:              # API Connect
       - apiconnect.ibm.com  # API Connect specific API groups
       - management.apiconnect.ibm.com
