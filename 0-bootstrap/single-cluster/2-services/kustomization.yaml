@@ -4,8 +4,8 @@ resources:
 - argocd/instances/ibm-cp4a-db2-instance.yaml
 - argocd/instances/ibm-cp4a-openldap-odm.yaml
 # Deploy DB2 Operator & CP4A
-# - argocd/operators/ibm-cp4a-operator.yaml
-# - argocd/instances/ibm-cp4a-odm.yaml
+- argocd/operators/ibm-cp4a-operator.yaml
+- argocd/instances/ibm-cp4a-odm.yaml
 
 # Sealed Secrets
 #- argocd/instances/sealed-secrets.yaml
