@@ -39,7 +39,15 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
     --docker-username=cp \
     --docker-password=${IBM_ENTITLEMENT_KEY}
 ```
-
+### add to Argo Cluster Role 
+```yaml
+  - verbs: #db2
+      - '*'
+    apiGroups:
+      - db2u.databases.ibm.com
+    resources:
+      - db2uclusters
+```
 ### Services - Kustomization.yaml
 
 1. This recipe is can be implemented using a combination of storage classes. Not all combination will work, the following table lists the storage classes that we have tested to work:
