@@ -16,6 +16,7 @@ rules:
       - configmaps
       - secrets
       - serviceaccounts
+      - db2ucluster
   - verbs:
       - '*'
     apiGroups:
