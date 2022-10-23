@@ -2,77 +2,43 @@
 
 This recipe is for deploying the Operational Desision Manager in a single namespace (i.e. `tools`): 
 
-### Adding a global pull secret using your [IBM Entitlement Key](https://myibm.ibm.com/products-services/containerlibrary) Cluster wide.
-    
-```bash
-export IBM_ENTITLEMENT_KEY=<IBM.ENTITELMENT.KEY>
-```
-```bash
-oc create secret docker-registry cpregistrysecret -n kube-system \
- --docker-server=cp.icr.io/cp/cpd \
- --docker-username=cp \
- --docker-password=${IBM_ENTITLEMENT_KEY} 
-```
-
-> If you want all the pods in your cluster to be able to pull images from the entitled registry, update the pull secret that is in the openshift-config namespace with the Docker account and entitlement key information.
->> Complete the following steps to update the pull secret:
-
-
-1. Extract the current pull secret that is in the openshift-config namespace:
-    ```bash
-    oc extract secret/pull-secret -n openshift-config --keys=.dockerconfigjson --to=. --confirm
-    ```
-1. Convert the extracted pull secret by using jq command-line JSON processor. To install jq, see jq command-line JSON processor Opens in a new tab.
-    ```bash
-    cat .dockerconfigjson | jq . >  .dockerconfigjson.orig
-    mv .dockerconfigjson.orig .dockerconfigjson
-    ```
-1. Convert your entitlement key to base64. Replace entitlement_key with the value of your entitlement key that you copied earlier from Container Software Library Opens in a new tab. Copy the base64 value to a safe location.
-    ```bash
-    echo "cp:entitlement_key" | base64
-    ```
-1. Make the following edits to the .dockerconfigjson file: In the auths section, add cp.icr.io to the existing list of objects. Replace auth_string with the base64 value that you got in the previous step. Important: You must enter the value of auth_string as a single, long string. If there are any line returns, you get an error.
-    ```json
-    {
-    "auths": {
-        "cp.icr.io" : {
-            "auth": "auth_string"
-                     }
-        }
-    }
-    ```
-1. Upload the updated pull secret to the openshift-config namespace:
-    ```bash
-    oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson
-    ```
-> After the pull secret successfully uploads, you see the following message:
-    ```
-    secret/pull-secret data updated
-    ```
-> The update restarts all the nodes in your cluster. Use the following command to monitor the status of the nodes. Wait until all nodes show the status as UPDATED: `True`.
-    
-```bash
-watch -n 3 oc get machineconfigpool
-```
-
 ### Infrastructure - Kustomization.yaml
 1. Edit the Infrastructure layer `${GITOPS_PROFILE}/1-infra/kustomization.yaml`, un-comment the following lines, commit and push the changes and synchronize the `infra` Application in the ArgoCD console.
 
-    ```bash        
+```bash        
     cd multi-tenancy-gitops/0-bootstrap/single-cluster/1-infra
-    ```
+```
 
-    ```yaml
+```yaml
     - argocd/consolenotification.yaml
     - argocd/namespace-ibm-common-services.yaml
     - argocd/namespace-sealed-secrets.yaml
     - argocd/namespace-tools.yaml
     - argocd/serviceaccounts-ibm-common-services.yaml
     - argocd/serviceaccounts-tools.yaml
-    ```
-    >  💡 **NOTE**  
-    > Commit and Push the changes for `multi-tenancy-gitops` & go to ArgoCD, open `infra` application and click refresh.
-    > Wait until everything gets deployed before moving to the next steps.
+```
+    
+>  💡 **NOTE**  
+> Commit and Push the changes for `multi-tenancy-gitops` & go to ArgoCD, open `infra` application and click refresh.
+ >> Wait until everything gets deployed before moving to the next steps.
+
+### Adding a global pull secret using your [IBM Entitlement Key](https://myibm.ibm.com/products-services/containerlibrary) Cluster wide.
+    
+```bash
+    export IBM_ENTITLEMENT_KEY=<IBM.ENTITELMENT.KEY>
+```
+```bash
+    oc create secret docker-registry cpregistrysecret -n kube-system \
+    --docker-server=cp.icr.io/cp/cpd \
+    --docker-username=cp \
+    --docker-password=${IBM_ENTITLEMENT_KEY} 
+```
+```bash
+    oc create secret docker-registry ibm-entitlement-key -n ibm-common-services \
+    --docker-server=cp.icr.io \
+    --docker-username=cp \
+    --docker-password=${IBM_ENTITLEMENT_KEY}
+```
 
 ### Services - Kustomization.yaml
 
