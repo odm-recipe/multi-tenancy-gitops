@@ -1,6 +1,5 @@
 resources:
-# IBM Software
-# - argocd/operators/ibm-cp4a-db2-operator.yaml
+# IBM CP4A/ODM
 - argocd/instances/ibm-cp4a-db2-instance.yaml
 - argocd/instances/ibm-cp4a-openldap-odm.yaml
 # Deploy DB2 Operator & CP4A
