@@ -197,7 +197,7 @@ for `Business Automation Navigator`, Create the database:
     ```
     >  💡 **NOTE**  
     > This should return this: 
-    ```c
+    ```bash
        Database Connection Information
 
     Database server        = DB2/LINUXX8664 11.5.7.0
@@ -211,7 +211,7 @@ for `Business Automation Navigator`, Create the database:
     ```
     >  💡 **NOTE**  
     > This should return this: 
-    ```c
+    ```bash
         Database Connection Information
 
     Database server        = DB2/LINUXX8664 11.5.7.0
