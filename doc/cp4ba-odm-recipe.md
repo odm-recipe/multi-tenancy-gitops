@@ -20,7 +20,6 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
 - argocd/namespace-odm.yaml
 - argocd/namespace-openldap.yaml
 - argocd/namespace-kube-system.yaml
-- argocd/norootsquash.yaml
 ```
     
 >  💡 **NOTE**  
@@ -56,6 +55,16 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
     --docker-username=cp \
     --docker-password=${IBM_ENTITLEMENT_KEY}
 ```
+### Adding `adding norootsquash`
+1. Edit the Infrastructure layer `${GITOPS_PROFILE}/1-infra/kustomization.yaml`, un-comment the following lines, commit and push the changes and synchronize the `infra` Application in the ArgoCD console.
+
+```bash        
+    cd multi-tenancy-gitops/0-bootstrap/single-cluster/1-infra
+```
+```yaml
+- argocd/norootsquash.yaml
+```
+
 ##### Make sure to allow `db2ucluster` instance deployment on the service layer by updating `${GITOPS_PROFILE}/multi-tenancy-gitops/setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml`
 ```bash
     cd multi-tenancy-gitops/setup/ocp4x
