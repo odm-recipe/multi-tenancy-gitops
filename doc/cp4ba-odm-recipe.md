@@ -10,17 +10,17 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
 ```
 
 ```yaml
-    - argocd/consolelink.yaml
-    - argocd/consolenotification.yaml
-    - argocd/namespace-ibm-common-services.yaml
-    - argocd/namespace-sealed-secrets.yaml
-    - argocd/namespace-tools.yaml
-    - argocd/namespace-db2.yaml
-    - argocd/namespace-cp4a.yaml
-    - argocd/namespace-odm.yaml
-    - argocd/namespace-openldap.yaml
-    - argocd/namespace-kube-system.yaml
-    - argocd/norootsquash.yaml
+- argocd/consolelink.yaml
+- argocd/consolenotification.yaml
+- argocd/namespace-ibm-common-services.yaml
+- argocd/namespace-sealed-secrets.yaml
+- argocd/namespace-tools.yaml
+- argocd/namespace-db2.yaml
+- argocd/namespace-cp4a.yaml
+- argocd/namespace-odm.yaml
+- argocd/namespace-openldap.yaml
+- argocd/namespace-kube-system.yaml
+- argocd/norootsquash.yaml
 ```
     
 >  💡 **NOTE**  
