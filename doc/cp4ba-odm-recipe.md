@@ -141,7 +141,7 @@ To run these commands you will need to log in to one of the Db2 pods. From now o
     oc get pods
     ```
 1. It will return something like this:
-    ```bash
+    ```c
     NAME                                        READY   STATUS      RESTARTS   AGE
     c-db2ucluster-cp4ba-db2u-0                  1/1     Running     0          39m
     c-db2ucluster-cp4ba-etcd-0                  1/1     Running     0          39m
