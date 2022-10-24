@@ -10,12 +10,17 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
 ```
 
 ```yaml
+    - argocd/consolelink.yaml
     - argocd/consolenotification.yaml
     - argocd/namespace-ibm-common-services.yaml
     - argocd/namespace-sealed-secrets.yaml
     - argocd/namespace-tools.yaml
-    - argocd/serviceaccounts-ibm-common-services.yaml
-    - argocd/serviceaccounts-tools.yaml
+    - argocd/namespace-db2.yaml
+    - argocd/namespace-cp4a.yaml
+    - argocd/namespace-odm.yaml
+    - argocd/namespace-openldap.yaml
+    - argocd/namespace-kube-system.yaml
+    - argocd/norootsquash.yaml
 ```
     
 >  💡 **NOTE**  
@@ -39,9 +44,26 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
     --docker-username=cp \
     --docker-password=${IBM_ENTITLEMENT_KEY}
 ```
-### add to Argo Cluster Role 
+```bash
+    oc create secret docker-registry ibm-entitlement-key -n db2\
+    --docker-server=cp.icr.io \
+    --docker-username=cp \
+    --docker-password=${IBM_ENTITLEMENT_KEY}
+```
+```bash
+    oc create secret docker-registry ibm-entitlement-key -n cp4a \
+    --docker-server=cp.icr.io \
+    --docker-username=cp \
+    --docker-password=${IBM_ENTITLEMENT_KEY}
+```
+### Make sure to allow `db2ucluster` instance deployment on the service layer by updating `${GITOPS_PROFILE}/multi-tenancy-gitops/setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml`
+```bash
+    cd multi-tenancy-gitops/setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml
+```
+& add the db2uclusters verbs to the app-controller `resources`
+
 ```yaml
-  - verbs: #db2
+  - verbs:
       - '*'
     apiGroups:
       - db2u.databases.ibm.com
@@ -55,18 +77,17 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
     | Component | Access Mode | IBM Cloud | OCS/ODF |
     | --- | --- | --- | --- |
     | DB2 | RWX | ibmc-file-gold-gid | ocs-storagecluster-cephfs |
+    | ODM | RWX | ibmc-file-gold-gid | ocs-storagecluster-cephfs |
 
-1. Edit the Services layer `${GITOPS_PROFILE}/2-services/kustomization.yaml` and install Sealed Secrets by uncommenting the following line, **commit** and **push** the changes and refresh the `services` Application in the ArgoCD console.
+1. Edit the Services layer `${GITOPS_PROFILE}/2-services/kustomization.yaml` and install Sealed Secrets, db2 operator, db2 instance, openldap & CP4A operator  by uncommenting the following line, **commit** and **push** the changes and refresh the `services` Application in the ArgoCD console.
    
     ```yaml
-    ## IBM Foundational Services / Common Services
-    - argocd/operators/ibm-foundations.yaml
-    - argocd/instances/ibm-foundational-services-instance.yaml
-    - argocd/operators/ibm-automation-foundation-core-operator.yaml
-
-    ## IBM Catalogs
-    - argocd/operators/ibm-catalogs.yaml
-
+    ## IBM DB2 operator & instance, Ldap
+    - argocd/operators/ibm-cp4a-db2.yaml
+    - argocd/instances/cp4a-db2-instance.yaml
+    - argocd/instances/ibm-cp4a-openldap-odm.yaml
+    ## IBM CP4A operator
+    - argocd/operators/ibm-cp4a-operator.yaml
     # Sealed Secrets
     - argocd/instances/sealed-secrets.yaml
     ```
@@ -75,66 +96,169 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
     > Commit and Push the changes for `multi-tenancy-gitops` & go to ArgoCD, open `services` application and click refresh.
     > Wait until everything gets deployed before moving to the next steps.
 
+
+### Create database users
+#### Log into the LDAP pod
+
+To run these commands you will need to log in to the LDAP pods. From now on this document will refer to this as the LDAP pod.
+
+1. Open up a new terminal or shell.
+First we need to get the name of the pod: 
+    ```bash
+    oc project db2
+    ldap_pod=$(oc get pods -l role=ldap -o name)
+    ```
+1. Log in to the Db2 pod:
+    ```bash
+    oc rsh ${ldap_pod} /bin/bash
+    ```
+1. Create database user for Business Automation Navigator:
+    ```bash
+    /opt/ibm/ldap_scripts/addLdapUser.py -u icnadm -p Passw0rd -r user
+    ```
+1. Create database user for Operational Decision Manager:
+    ```bash
+    /opt/ibm/ldap_scripts/addLdapUser.py -u odmadm -p Passw0rd -r user
+    ```
+    >  💡 **NOTE**  
+    > Once your users are created you can type exit to exit the pod.
+
+### Configuring the database
+1. Create the databases
+To run these commands you will need to log in to one of the Db2 pods. From now on this document will refer to this as the Db2 pod.
+    ```bash
+    oc project db2
+    oc get pods
+    ```
+1. It will return something like this:
+    ```bash
+    NAME                                        READY   STATUS      RESTARTS   AGE
+    c-db2ucluster-cp4ba-db2u-0                  1/1     Running     0          39m
+    c-db2ucluster-cp4ba-etcd-0                  1/1     Running     0          39m
+    c-db2ucluster-cp4ba-instdb-fccgh            0/1     Completed   0          42m
+    c-db2ucluster-cp4ba-ldap-688dd46d48-tdjrr   1/1     Running     0          42m
+    c-db2ucluster-cp4ba-restore-morph-8tpff     0/1     Completed   0          38m
+    db2u-operator-manager-5bf49db4ff-7fr4n      1/1     Running     0          93m
+    ```
+1. Access the pod which ends with `db2u-0`:
+    ```bash
+    oc rsh c-db2ucluster-cp4ba-db2u-0 /bin/bash
+    ```
+1. Once inside the pod you need to switch to the user that is the instance owner (probably db2inst1).
+    ```bash
+    sudo su - ${DB2INSTANCE}
+    ```
+1. You will run the commands in this section from inside this Db2 pod.
+for `Business Automation Navigator`, Create the database:
+    ```bash
+    db2 create database icndb automatic storage yes using codeset UTF-8 territory US pagesize 32768;
+    ```
+    >  💡 **NOTE**  
+    > This will probably will take from `5-10` and then it should return this: 
+    > `DB20000I  The CREATE DATABASE command completed successfully.`
+1. Add user permissions:
+    ```bash
+    db2 connect to icndb;
+    db2 grant dbadm on database to user icnadm;
+    db2 connect reset;
+    ```
+### Operational Decision Manager database configuration:
+1. Create the database:
+    ```bash
+    db2 create database odmdb automatic storage yes using codeset UTF-8 territory US pagesize 32768;
+    ```
+    >  💡 **NOTE**  
+    > This will probably will take from `5-10` and then it should return this: 
+    > `DB20000I  The CREATE DATABASE command completed successfully.`
+1. Add user permissions:
+    ```bash
+    db2 connect to odmdb;
+    db2 CREATE BUFFERPOOL BP32K SIZE 2000 PAGESIZE 32K;
+    db2 CREATE TABLESPACE RESDWTS PAGESIZE 32K BUFFERPOOL BP32K;
+    db2 CREATE SYSTEM TEMPORARY TABLESPACE RESDWTMPTS PAGESIZE 32K BUFFERPOOL BP32K;
+    db2 grant dbadm on database to user odmadm;
+    db2 connect reset;
+    ```
+### Deploy ODM Operational Decision Manager
+1. Validate database connectivity for Business Automation Navigator:
+    ```bash
+    db2 connect to icndb user icnadm using Passw0rd;
+    db2 connect reset;
+    ```
+    >  💡 **NOTE**  
+    > This should return this: 
+    ```
+       Database Connection Information
+
+    Database server        = DB2/LINUXX8664 11.5.7.0
+    SQL authorization ID   = ICNADM
+    Local database alias   = ICNDB
+    ```
+1. Validate database connectivity for Operational Decision Manager:
+    ```bash
+    db2 connect to odmdb user odmadm using Passw0rd;
+    db2 connect reset;
+    ```
+    >  💡 **NOTE**  
+    > This should return this: 
+    ```
+        Database Connection Information
+
+    Database server        = DB2/LINUXX8664 11.5.7.0
+    SQL authorization ID   = ODMADM
+    Local database alias   = ODMDB
+    ```
 1. Edit the Services layer `${GITOPS_PROFILE}/2-services/kustomization.yaml` and install Sealed Secrets by uncommenting the following line, **commit** and **push** the changes and refresh the `services` Application in the ArgoCD console.
  
-> **⚠️** Warning:
->> Make sure that `${GITOPS_PROFILE}/2-services/argocd/instances/ibm-platform-navigator-instance.yaml`
-   
-```yaml
-    storage:
-      class: managed-nfs-storage
-```  
-Then enable Platform Navigator Operator & Instance.  
-```yaml
-    ## Cloud Pak for Integration
-    - argocd/operators/ibm-platform-navigator.yaml
-    - argocd/instances/ibm-platform-navigator-instance.yaml
-``` 
-
+    ```yaml
+    - argocd/operators/ibm-cp4a-odm.yaml
+    ```
 >  💡 **NOTE**  
 > Commit and Push the changes for `multi-tenancy-gitops` & go to ArgoCD, open `services` application and click refresh.
 > Wait until everything gets deployed before moving to the next steps.
 
-1. Edit the Services layer `${GITOPS_PROFILE}/2-services/kustomization.yaml` by uncommenting the following line to install Sterling File Gateway, **commit** and **push** the changes and refresh the `services` Application in the ArgoCD console:
 
-    ```yaml
-    ## Cloud Pak for Integration
-    - argocd/operators/ibm-datapower-operator.yaml
-    ```
-
-    >  💡 **NOTE**  
-    > Commit and Push the changes for `multi-tenancy-gitops` and
-    > sync ArgoCD application `services` layer.
+> **⚠️** Warning:
+>> Make sure that may take between `1.5 hrs to 2 hrs`
 
 ---
 
 ### Validation
-1.  Check the status of the `CommonService`,`PlatformNavigator` & `Datapower` custom resource.
+1.  Verify the status:
     ```bash
-    # Verify the Common Services instance has been deployed successfully
-    oc get commonservice common-service -n ibm-common-services -o=jsonpath='{.status.phase}'
-    # Expected output = Succeeded
-
-    # [Optional] If selected, verify the Platform Navigator instance has been deployed successfully
-    oc get platformnavigator -n tools -o=jsonpath='{ .items[*].status.conditions[].status }'
-    # Expected output = True
+    oc get icp4acluster icp4adeploy -n cp4ba -o jsonpath="{.status}{'\n'}" | jq
     ```
-1.  Log in to the Platform Navigator console
-    ```bash
-    # Retrieve Platform Navigator Console URL
-    oc get route -n tools integration-navigator-pn -o template --template='https://{{.spec.host}}'
-    # Retrieve admin password
-    oc extract -n ibm-common-services secrets/platform-auth-idp-credentials --keys=admin_username,admin_password --to=-
+1. Access The URLs can be found in the `icp4adploy-cp4a-access-info` configmap in the `cp4a` namespace. Look for the section called `odm-access-info`, which will contain content similar to this:
+    ```yaml
+    CloudPak dashboard: https://cpd-$NAMESPACE.$INGRESS_DOMAIN
+    ODM Decision Center URL: https://cpd-$NAMESPACE.$INGRESS_DOMAIN/odm/decisioncenter
+    ODM Decision Runner URL: https://cpd-$NAMESPACE.$INGRESS_DOMAIN/odm/DecisionRunner
+    ODM Decision Server Console URL: https://cpd-$NAMESPACE.$INGRESS_DOMAIN/odm/res
+    ODM Decision Server Runtime URL: https://cpd-$NAMESPACE.$INGRESS_DOMAIN/odm/DecisionService
     ```
 
-1. Validate Datapower Operator
-    ```bash
-    oc get operators datapower-operator.openshift-operators -o=jsonpath='{ .status.components.refs[12].conditions[*].type}'
-    # Expected output = Succeeded
-    ```  
-    or from the console by doing the following steps
-    ```bash
-    oc console
-    ``` 
-    Click on `Operators Tab`->`Installed operators` from the menu on the left and validate the status of datapower operator `Succeeded`
-    ![DataPower Operator](images/datapower-operator.png)
+1. When the cloud pak is successfully installed you should be able to login as the default admin user. In this case, the default admin user is `admin` and the `password` can be found in the `ibm-iam-bindinfo-platform-auth-idp-credentials` secret in the `cp4a` namespace. 
+
+### Post Deployment Steps
+You will need to grant your users various access roles, depending on their needs. You manage permissions using the `Administration` -> `Access control page` in the `Cloud pak dashboard`.
+
+1. Click on the hamburger menu on the top left corner of the dashboard; expand the `Administration` section and click on `Access control`.
+
+1. Click on the User Groups tab, then click on `New user group`.
+
+1. Name the group `odmadmins`, and click `Next`.
+
+1. Click `Identity provider groups`, then type cpadmins in the search field. It should come back with one result: `cn=cpadmins,ou=Groups,dc=cp`. Select it and click `Next`. Click all of the `roles`:
+    ```
+    Administrator
+    Automation Administrator
+    Automation Analyst
+    Automation Developer
+    Automation Operator
+    ODM Administrator
+    ODM Business User
+    ODM Runtime administrator
+    ODM Runtime user
+    User
+    ```
+Click `Next`, then click `Create`.
