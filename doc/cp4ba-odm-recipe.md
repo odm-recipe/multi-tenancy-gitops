@@ -221,7 +221,7 @@ for `Business Automation Navigator`, Create the database:
 1. Edit the Services layer `${GITOPS_PROFILE}/2-services/kustomization.yaml` and install Sealed Secrets by uncommenting the following line, **commit** and **push** the changes and refresh the `services` Application in the ArgoCD console.
  
     ```yaml
-    - argocd/operators/ibm-cp4a-odm.yaml
+    - argocd/instances/ibm-cp4a-odm.yaml
     ```
 >  💡 **NOTE**  
 > Commit and Push the changes for `multi-tenancy-gitops` & go to ArgoCD, open `services` application and click refresh.
