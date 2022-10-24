@@ -8,6 +8,8 @@ resources:
 - argocd/namespace-cp4a.yaml
 - argocd/namespace-odm.yaml
 - argocd/namespace-openldap.yaml
+- argocd/namespace-kube-system.yaml
+- argocd/norootsquash.yaml
 # - argocd/serviceaccounts-ibm-common-services.yaml
 # - argocd/serviceaccounts-tools.yaml
 
