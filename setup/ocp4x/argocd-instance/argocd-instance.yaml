@@ -495,6 +495,7 @@ spec:
     icp4a.ibm.com/ICP4ACluster:
       health.lua: |
         hs = {}
+        hs.status = "Progressing"
         generation = obj.metadata.generation
         if obj.status ~= nil then
           observedGeneration = 0
@@ -523,7 +524,6 @@ spec:
             end
           end
         end
-        hs.status = "Progressing"
         return hs
     processmining.ibm.com/ProcessMining:
       health.lua: |
