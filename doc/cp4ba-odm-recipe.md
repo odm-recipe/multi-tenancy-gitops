@@ -58,17 +58,20 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
 ```
 ##### Make sure to allow `db2ucluster` instance deployment on the service layer by updating `${GITOPS_PROFILE}/multi-tenancy-gitops/setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml`
 ```bash
-    cd multi-tenancy-gitops/setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml
+    cd multi-tenancy-gitops/setup/ocp4x
 ```
-& add the db2uclusters verbs to the app-controller `resources`
+& add update `custom-argocd-app-controller-clusterrole.yaml` db2uclusters verbs to the app-controller `resources`
 
 ```yaml
-  - verbs:
-      - '*'
-    apiGroups:
-      - db2u.databases.ibm.com
-    resources:
-      - db2uclusters
+- verbs:
+    - '*'
+apiGroups:
+    - db2u.databases.ibm.com
+resources:
+    - db2uclusters
+```
+```yaml
+oc apply -f setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml
 ```
 ### Services - Kustomization.yaml
 
