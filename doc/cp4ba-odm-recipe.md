@@ -131,7 +131,7 @@ First we need to get the name of the pod:
     /opt/ibm/ldap_scripts/addLdapUser.py -u odmadm -p Passw0rd -r user
     ```
     >  💡 **NOTE**  
-    > Once your users are created you can type exit to exit the pod.
+    > Once your users are created you can type `exit` to exit the pod.
 
 ### Configuring the database
 1. Create the databases
