@@ -3,7 +3,7 @@ kind: Application
 metadata:
   name: ibm-cp4a-operator
   annotations:
-    argocd.argoproj.io/sync-wave: "230"
+    argocd.argoproj.io/sync-wave: "250"
   labels:
     gitops.tier.group: cp4a
     gitops.tier.layer: services

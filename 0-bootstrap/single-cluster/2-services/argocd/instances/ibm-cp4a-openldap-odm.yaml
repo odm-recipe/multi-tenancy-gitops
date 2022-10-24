@@ -3,7 +3,7 @@ kind: Application
 metadata:
   name: ibm-cp4a-openldap-odm
   annotations:
-    argocd.argoproj.io/sync-wave: "260"
+    argocd.argoproj.io/sync-wave: "230"
   labels:
     gitops.tier.group: cntk
     gitops.tier.layer: services
