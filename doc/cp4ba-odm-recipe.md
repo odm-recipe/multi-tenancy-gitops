@@ -45,7 +45,7 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
     --docker-password=${IBM_ENTITLEMENT_KEY}
 ```
 ```bash
-    oc create secret docker-registry ibm-entitlement-key -n db2\
+    oc create secret docker-registry ibm-entitlement-key -n db2 \
     --docker-server=cp.icr.io \
     --docker-username=cp \
     --docker-password=${IBM_ENTITLEMENT_KEY}
@@ -56,7 +56,7 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
     --docker-username=cp \
     --docker-password=${IBM_ENTITLEMENT_KEY}
 ```
-### Make sure to allow `db2ucluster` instance deployment on the service layer by updating `${GITOPS_PROFILE}/multi-tenancy-gitops/setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml`
+##### Make sure to allow `db2ucluster` instance deployment on the service layer by updating `${GITOPS_PROFILE}/multi-tenancy-gitops/setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml`
 ```bash
     cd multi-tenancy-gitops/setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml
 ```
