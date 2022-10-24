@@ -7,6 +7,7 @@ resources:
 - argocd/namespace-db2.yaml
 - argocd/namespace-cp4a.yaml
 - argocd/namespace-odm.yaml
+- argocd/namespace-openldap.yaml
 # - argocd/serviceaccounts-ibm-common-services.yaml
 # - argocd/serviceaccounts-tools.yaml
 
