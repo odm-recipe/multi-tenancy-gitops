@@ -181,7 +181,7 @@ for `Business Automation Navigator`, Create the database:
     > This will probably will take from `5-10` and then it should return this: 
     > `DB20000I  The CREATE DATABASE command completed successfully.`
 1. Add user permissions:
-    ```bash
+    ```c
     db2 connect to odmdb;
     db2 CREATE BUFFERPOOL BP32K SIZE 2000 PAGESIZE 32K;
     db2 CREATE TABLESPACE RESDWTS PAGESIZE 32K BUFFERPOOL BP32K;
@@ -197,7 +197,7 @@ for `Business Automation Navigator`, Create the database:
     ```
     >  💡 **NOTE**  
     > This should return this: 
-    ```
+    ```c
        Database Connection Information
 
     Database server        = DB2/LINUXX8664 11.5.7.0
@@ -211,7 +211,7 @@ for `Business Automation Navigator`, Create the database:
     ```
     >  💡 **NOTE**  
     > This should return this: 
-    ```
+    ```c
         Database Connection Information
 
     Database server        = DB2/LINUXX8664 11.5.7.0
