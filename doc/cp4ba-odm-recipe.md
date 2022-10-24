@@ -1,4 +1,4 @@
-# Deploy [Operational Desision Manager](https://www.ibm.com/products/operational-decision-manager)
+# Deploy [Operational Decision Manager](https://www.ibm.com/products/operational-decision-manager)
 
 This recipe is for deploying the Operational Desision Manager in a single namespace (i.e. `tools`): 
 
