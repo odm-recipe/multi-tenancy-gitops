@@ -20,51 +20,17 @@ spec:
     server: https://kubernetes.default.svc
   - namespace: openshift-marketplace
     server: https://kubernetes.default.svc
-  - namespace: ci
-    server: https://kubernetes.default.svc
-  - namespace: dev
-    server: https://kubernetes.default.svc
-  - namespace: staging
-    server: https://kubernetes.default.svc
-  - namespace: prod
-    server: https://kubernetes.default.svc
   - namespace: sealed-secrets
-    server: https://kubernetes.default.svc
-  - namespace: istio-system
     server: https://kubernetes.default.svc
   - namespace: openldap
     server: https://kubernetes.default.svc
-  - namespace: instana-agent
-    server: https://kubernetes.default.svc
   - namespace: openshift-gitops
-    server: https://kubernetes.default.svc
-  - namespace: openshift-serverless
-    server: https://kubernetes.default.svc
-  - namespace: spp
-    server: https://kubernetes.default.svc
-  - namespace: knative-serving
-    server: https://kubernetes.default.svc
-  - namespace: spp-velero
-    server: https://kubernetes.default.svc
-  - namespace: baas
-    server: https://kubernetes.default.svc
-  - namespace: robot-shop
     server: https://kubernetes.default.svc
   - namespace: db2
     server: https://kubernetes.default.svc
-  - namespace: mq
-    server: https://kubernetes.default.svc
-  - namespace: pem
-    server: https://kubernetes.default.svc
-  - namespace: b2bi-prod
-    server: https://kubernetes.default.svc
-  - namespace: b2bi-nonprod
-    server: https://kubernetes.default.svc
-  - namespace: ssp
-    server: https://kubernetes.default.svc
-  - namespace: sccm
-    server: https://kubernetes.default.svc
   - namespace: kube-system
+    server: https://kubernetes.default.svc
+  - namespace: cp4a
     server: https://kubernetes.default.svc
   clusterResourceWhitelist:
   # TODO: SCC needs to be moved to 1-infra, here for now for artifactory

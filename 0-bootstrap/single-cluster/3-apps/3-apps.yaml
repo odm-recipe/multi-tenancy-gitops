@@ -8,13 +8,13 @@ metadata:
 spec:
   sourceRepos: []  # Populated by kustomize patches in 3-apps/kustomization.yaml
   destinations:
-  - namespace: ci
+  - namespace: odm
     server: https://kubernetes.default.svc
-  - namespace: dev
+  - namespace: cp4a
     server: https://kubernetes.default.svc
-  - namespace: staging
+  - namespace: openldap
     server: https://kubernetes.default.svc
-  - namespace: prod
+  - namespace: db2
     server: https://kubernetes.default.svc
   - namespace: tools
     server: https://kubernetes.default.svc

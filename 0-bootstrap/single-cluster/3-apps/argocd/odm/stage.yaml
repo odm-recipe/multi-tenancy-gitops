@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: apps-ace-dev
+  name: apps-odm-stage
   annotations:
     argocd.argoproj.io/sync-wave: "300"
   labels:
@@ -14,7 +14,7 @@ spec:
     server: https://kubernetes.default.svc
   project: applications
   source:
-    path: ace/config/argocd/dev
+    path: odm/config/argocd/staging
   syncPolicy:
     automated:
       prune: true
