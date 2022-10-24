@@ -152,7 +152,7 @@ To run these commands you will need to log in to one of the Db2 pods. From now o
     ```
 1. Access the pod which ends with `db2u-0`:
     ```bash
-    oc rsh <POD ENDING WITH`db2u-0`> /bin/bash
+    oc rsh <POD ENDING WITH`db2u-0`>/bin/bash
     ```
 1. Once inside the pod you need to switch to the user that is the instance owner (probably db2inst1).
     ```bash
