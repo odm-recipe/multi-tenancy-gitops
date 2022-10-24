@@ -18,41 +18,11 @@ spec:
     server: https://kubernetes.default.svc
   - namespace: openldap
     server: https://kubernetes.default.svc
-  - namespace: instana-agent
-    server: https://kubernetes.default.svc
-  - namespace: openshift-gitops
-    server: https://kubernetes.default.svc
-  - namespace: openshift-serverless
-    server: https://kubernetes.default.svc
-  - namespace: openshift-machine-api
-    server: https://kubernetes.default.svc
-  - namespace: openshift-storage
-    server: https://kubernetes.default.svc
-  - namespace: openshift-monitoring
-    server: https://kubernetes.default.svc
-  - namespace: openshift-cluster-node-tuning-operator
-    server: https://kubernetes.default.svc
-  - namespace: spp
-    server: https://kubernetes.default.svc
-  - namespace: spp-velero
-    server: https://kubernetes.default.svc
-  - namespace: baas
-    server: https://kubernetes.default.svc
-  - namespace: robot-shop
-    server: https://kubernetes.default.svc
-  - namespace: pem
-    server: https://kubernetes.default.svc
-  - namespace: b2bi-prod
-    server: https://kubernetes.default.svc
-  - namespace: b2bi-nonprod
-    server: https://kubernetes.default.svc
-  - namespace: kube-system
-    server: https://kubernetes.default.svc
-  - namespace: ssp
+  - namespace: cp4a
     server: https://kubernetes.default.svc
   - namespace: openshift-image-registry
     server: https://kubernetes.default.svc
-  - namespace: sccm
+  - namespace: odm
     server: https://kubernetes.default.svc
   clusterResourceWhitelist:
   - group: ""
