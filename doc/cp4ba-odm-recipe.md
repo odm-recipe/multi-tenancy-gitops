@@ -100,8 +100,6 @@ oc apply -f setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml
     - argocd/instances/ibm-cp4a-openldap-odm.yaml
     ## IBM CP4A operator
     - argocd/operators/ibm-cp4a-operator.yaml
-    # Sealed Secrets
-    - argocd/instances/sealed-secrets.yaml
     ```
 
     >  💡 **NOTE**  
