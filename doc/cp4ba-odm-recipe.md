@@ -64,24 +64,6 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
 ```yaml
 - argocd/norootsquash.yaml
 ```
-
-##### Make sure to allow `db2ucluster` instance deployment on the service layer by updating `${GITOPS_PROFILE}/multi-tenancy-gitops/setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml`
-```bash
-    cd multi-tenancy-gitops/setup/ocp4x
-```
-& add update `custom-argocd-app-controller-clusterrole.yaml` db2uclusters verbs to the app-controller `resources`
-
-```yaml
-- verbs:
-    - '*'
-apiGroups:
-    - db2u.databases.ibm.com
-resources:
-    - db2uclusters
-```
-```yaml
-oc apply -f setup/ocp4x/custom-argocd-app-controller-clusterrole.yaml
-```
 ### Services - Kustomization.yaml
 
 1. This recipe is can be implemented using a combination of storage classes. Not all combination will work, the following table lists the storage classes that we have tested to work:
@@ -136,7 +118,7 @@ First we need to get the name of the pod:
 ### Configuring the database
 1. Create the databases
 To run these commands you will need to log in to one of the Db2 pods. From now on this document will refer to this as the Db2 pod.
-    ```bash
+    ```
     oc project db2
     oc get pods
     ```
@@ -152,7 +134,7 @@ To run these commands you will need to log in to one of the Db2 pods. From now o
     ```
 1. Access the pod which ends with `db2u-0`:
     ```bash
-    oc rsh <POD ENDING WITH`db2u-0`>/bin/bash
+    oc rsh c-db2ucluster-cp4ba-db2u-0/bin/bash
     ```
 1. Once inside the pod you need to switch to the user that is the instance owner (probably db2inst1).
     ```bash
@@ -250,6 +232,18 @@ for `Business Automation Navigator`, Create the database:
 1. When the cloud pak is successfully installed you should be able to login as the default admin user. In this case, the default admin user is `admin` and the `password` can be found in the `ibm-iam-bindinfo-platform-auth-idp-credentials` secret in the `cp4a` namespace. 
 
 ### Post Deployment Steps
+#### Deploy console links
+You will need to run `console.sh` script to be able to access ODM console links:
+```bash
+cd multi-tenancy-gitops-services/instances/ibm-icpacluster/post-deploy
+```
+```bash
+chmod +x ./console.sh
+```
+```bash
+./console.sh
+```
+#### Granting users.
 You will need to grant your users various access roles, depending on their needs. You manage permissions using the `Administration` -> `Access control page` in the `Cloud pak dashboard`.
 
 1. Click on the hamburger menu on the top left corner of the dashboard; expand the `Administration` section and click on `Access control`.

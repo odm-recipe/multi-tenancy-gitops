@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ibm-cp4a-odm
+  name: ibm-icp4acluster
   annotations:
     argocd.argoproj.io/sync-wave: "280"
   labels:
@@ -16,7 +16,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   project: services
   source:
-    path: instances/cp4a-odm
+    path: instances/ibm-icp4acluster
   syncPolicy:
     automated:
       prune: true

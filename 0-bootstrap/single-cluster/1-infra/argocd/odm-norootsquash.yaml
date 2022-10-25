@@ -12,7 +12,7 @@ spec:
     server: https://kubernetes.default.svc
   project: infra
   source:
-    path: norootsquash
+    path: norootsquash/odm
   syncPolicy:
     automated:
       prune: true
