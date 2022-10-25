@@ -1,10 +1,10 @@
 resources:
 # IBM CP4A/ODM
 - argocd/operators/ibm-cp4a-db2.yaml
-- argocd/instances/cp4a-db2-instance.yaml
+- argocd/instances/ibm-cp4a-db2ucluster.yaml
 - argocd/instances/ibm-cp4a-openldap-odm.yaml
-- argocd/operators/ibm-cp4a-operator.yaml
-- argocd/instances/ibm-cp4a-odm.yaml
+- argocd/operators/ibm-cp4a-odm-operator.yaml
+- argocd/instances/ibm-cp4a-icp4acluster.yaml
 # Sealed Secrets
 #- argocd/instances/sealed-secrets.yaml
 

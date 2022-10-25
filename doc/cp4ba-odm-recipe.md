@@ -73,15 +73,15 @@ This recipe is for deploying the Operational Desision Manager in a single namesp
     | DB2 | RWX | ibmc-file-gold-gid | ocs-storagecluster-cephfs |
     | ODM | RWX | ibmc-file-gold-gid | ocs-storagecluster-cephfs |
 
-1. Edit the Services layer `${GITOPS_PROFILE}/2-services/kustomization.yaml` and install Sealed Secrets, db2 operator, db2 instance, openldap & CP4A operator  by uncommenting the following line, **commit** and **push** the changes and refresh the `services` Application in the ArgoCD console.
+1. Edit the Services layer `${GITOPS_PROFILE}/2-services/kustomization.yaml` and install db2 operator, db2 instance, openldap & CP4A operator  by uncommenting the following line, **commit** and **push** the changes and refresh the `services` Application in the ArgoCD console.
    
     ```yaml
     ## IBM DB2 operator & instance, Ldap
     - argocd/operators/ibm-cp4a-db2.yaml
-    - argocd/instances/cp4a-db2-instance.yaml
+    - argocd/instances/ibm-cp4a-db2ucluster.yaml
     - argocd/instances/ibm-cp4a-openldap-odm.yaml
     ## IBM CP4A operator
-    - argocd/operators/ibm-cp4a-operator.yaml
+    - argocd/operators/ibm-cp4a-odm-operator.yaml
     ```
 
     >  💡 **NOTE**  
@@ -203,7 +203,7 @@ for `Business Automation Navigator`, Create the database:
 1. Edit the Services layer `${GITOPS_PROFILE}/2-services/kustomization.yaml` and install Sealed Secrets by uncommenting the following line, **commit** and **push** the changes and refresh the `services` Application in the ArgoCD console.
  
     ```yaml
-    - argocd/instances/ibm-cp4a-odm.yaml
+    - argocd/instances/ibm-cp4a-icp4acluster.yaml
     ```
 >  💡 **NOTE**  
 > Commit and Push the changes for `multi-tenancy-gitops` & go to ArgoCD, open `services` application and click refresh.
