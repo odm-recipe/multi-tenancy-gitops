@@ -388,12 +388,6 @@ rules:
   - verbs:
       - '*'
     apiGroups:
-      - db2u.databases.ibm.com
-    resources:
-      - dvservices
-  - verbs:
-      - '*'
-    apiGroups:
       - policy
     resources:
       - podsecuritypolicies
@@ -415,3 +409,9 @@ rules:
       - wml.cpd.ibm.com
     resources:
       - wmlbases
+  - verbs:
+      - '*'
+    apiGroups:
+      - db2u.databases.ibm.com
+    resources:
+      - dvservices

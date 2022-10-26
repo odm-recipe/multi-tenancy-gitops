@@ -5,8 +5,7 @@ resources:
 - argocd/instances/ibm-cp4a-openldap-odm.yaml
 - argocd/operators/ibm-cp4a-odm-operator.yaml
 - argocd/instances/ibm-cp4a-icp4acluster.yaml
-# Sealed Secrets
-#- argocd/instances/sealed-secrets.yaml
+
 
 patches:
 - target:
